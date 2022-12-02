@@ -15,13 +15,14 @@ fn day_01_part_1(input: &str) -> i32 {
     let mut current = 0;
 
     for line in lines {
-        let num = line.parse::<i32>();
-        if num.is_ok() {
-            current += num.unwrap()
-        } else {
+        if line.is_empty() {
             max_calories = max(max_calories, current);
-            current = 0
+            current = 0;
+            continue;
         }
+
+        let num = line.parse::<i32>();
+        current += num.unwrap()
     }
     return max_calories;
 }
@@ -31,13 +32,13 @@ fn day_01_part_2(input: &str) -> i32 {
     let mut elves = Vec::new();
     let mut current = 0;
     for line in lines {
-        let num = line.parse::<i32>();
-        if num.is_ok() {
-            current += num.unwrap();
-        } else {
+        if line.is_empty() {
             elves.push(current);
-            current = 0
+            current = 0;
+            continue;
         }
+        let num = line.parse::<i32>();
+        current += num.unwrap();
     }
     elves.push(current);
     elves.sort();

@@ -2,5 +2,7 @@
 
 members = [
   "inputs",
-  "day01"
+  "app",
+  "day01",
+  "day02"
 ]

@@ -1,7 +1,7 @@
 use inputs::read_in_file;
 use std::cmp::max;
 
-fn main() {
+pub fn day01() {
     println!("Day 01");
     let input = read_in_file("./day01/src/day01.txt");
     let result_part_1 = day_01_part_1(&input);

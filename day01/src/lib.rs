@@ -1,12 +1,11 @@
 use inputs::read_in_file;
+use results::print_result;
 use std::cmp::max;
-
 pub fn day01() {
-    println!("Day 01");
     let input = read_in_file("./day01/src/day01.txt");
     let result_part_1 = day_01_part_1(&input);
     let result_part_2 = day_01_part_2(&input);
-    println!("Part 1: {},\tPart 2: {}", result_part_1, result_part_2)
+    print_result(1, result_part_1, result_part_2)
 }
 
 fn day_01_part_1(input: &str) -> i32 {

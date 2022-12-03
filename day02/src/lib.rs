@@ -1,10 +1,10 @@
 use inputs::read_in_file;
+use results::print_result;
 pub fn day02() {
-    println!("Day 02");
     let input = read_in_file("./day02/src/day02.txt");
     let part1 = day_02_part_1(&input);
     let part2 = day_02_part_2(&input);
-    println!("Part 1: {},\tPart 2: {}", part1, part2);
+    print_result(2, part1, part2)
 }
 
 fn day_02_part_1(input: &str) -> i32 {

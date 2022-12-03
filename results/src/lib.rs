@@ -1,0 +1,20 @@
+pub fn print_result(day: u8, part1: i32, part2: i32) {
+    println!("{}", format_result(day, part1, part2))
+}
+
+fn format_result(day: u8, part1: i32, part2: i32) -> String {
+    return String::from(format!(
+        "Day {:0>2}:\tPart 1: {}\tPart 2: {}",
+        day, part1, part2
+    ));
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn format_test() {
+        let string = format_result(1, 123, 456);
+        assert_eq!("Day 01:\tPart 1: 123\tPart 2: 456", string);
+    }
+}

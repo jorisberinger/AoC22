@@ -1,8 +1,10 @@
 [workspace]
 
 members = [
-  "inputs",
   "app",
+  "inputs",
+  "results",
   "day01",
-  "day02"
+  "day02",
+  "day03",
 ]

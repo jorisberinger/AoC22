@@ -32,7 +32,20 @@ fn getMatch(captures: &Captures, i: usize) -> i32 {
         .unwrap()
 }
 fn part2(input: &str) -> i32 {
-    return 0;
+    let mut result = 0;
+    let re = Regex::new(r"^(\d+)-(\d+),(\d+)-(\d+)$").unwrap();
+    for line in input.lines() {
+        let captures = re.captures(line).unwrap();
+        let s1 = getMatch(&captures, 1);
+        let s2 = getMatch(&captures, 2);
+        let s3 = getMatch(&captures, 3);
+        let s4 = getMatch(&captures, 4);
+
+        if s1 <= s3 && s2 >= s3 || s3 <= s1 && s4 >= s1 {
+            result += 1;
+        }
+    }
+    return result;
 }
 #[cfg(test)]
 mod tests {
@@ -51,6 +64,6 @@ mod tests {
     #[test]
     fn part2_test() {
         let result = part2(INPUT);
-        assert_eq!(0, result)
+        assert_eq!(4, result)
     }
 }

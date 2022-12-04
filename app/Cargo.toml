@@ -9,4 +9,4 @@ edition = "2021"
 day01 = { path = "../day01/" }
 day02 = { path = "../day02/" }
 day03 = { path = "../day03/" }
-day04 = { version = "0.1.0", path = "../day04" }
+day04 = { path = "../day04" }

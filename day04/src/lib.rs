@@ -13,10 +13,10 @@ fn part1(input: &str) -> i32 {
     let re = Regex::new(r"^(\d+)-(\d+),(\d+)-(\d+)$").unwrap();
     for line in input.lines() {
         let captures = re.captures(line).unwrap();
-        let s1 = getMatch(&captures, 1);
-        let s2 = getMatch(&captures, 2);
-        let s3 = getMatch(&captures, 3);
-        let s4 = getMatch(&captures, 4);
+        let s1 = get_match(&captures, 1);
+        let s2 = get_match(&captures, 2);
+        let s3 = get_match(&captures, 3);
+        let s4 = get_match(&captures, 4);
 
         if (s1 <= s3 && s2 >= s4) || (s3 <= s1 && s4 >= s2) {
             result += 1;
@@ -25,7 +25,7 @@ fn part1(input: &str) -> i32 {
     return result;
 }
 
-fn getMatch(captures: &Captures, i: usize) -> i32 {
+fn get_match(captures: &Captures, i: usize) -> i32 {
     captures
         .get(i)
         .map(|m| m.as_str().parse::<i32>().unwrap())
@@ -36,10 +36,10 @@ fn part2(input: &str) -> i32 {
     let re = Regex::new(r"^(\d+)-(\d+),(\d+)-(\d+)$").unwrap();
     for line in input.lines() {
         let captures = re.captures(line).unwrap();
-        let s1 = getMatch(&captures, 1);
-        let s2 = getMatch(&captures, 2);
-        let s3 = getMatch(&captures, 3);
-        let s4 = getMatch(&captures, 4);
+        let s1 = get_match(&captures, 1);
+        let s2 = get_match(&captures, 2);
+        let s3 = get_match(&captures, 3);
+        let s4 = get_match(&captures, 4);
 
         if s1 <= s3 && s2 >= s3 || s3 <= s1 && s4 >= s1 {
             result += 1;

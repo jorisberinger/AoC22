@@ -6,9 +6,7 @@ pub fn day05() {
     let input = read_in_file("./day05/src/day05.txt");
     let result_1 = part1(&input);
     let result_2 = part2(&input);
-    println!("{}", result_1);
-    println!("{}", result_2)
-    // print_result(5, result_1, result_2);
+    print_result(5, result_1, result_2);
 }
 fn part1(input: &str) -> String {
     let mut stacks: Vec<Vec<char>> = vec![Vec::new(); 10];

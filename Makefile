@@ -16,7 +16,7 @@ day: delete-day
     			let input = read_in_file("./$(day)/src/$(day).txt"); \
     			let result_1 = part1(&input); \
     			let result_2 = part2(&input); \
-					print_result($(day:-2), result_1, result_2); \
+					print_result(${day: -2}, result_1, result_2); \
 				} \
 				fn part1(input: &str) -> i32 { \
 					todo!(); \

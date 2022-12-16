@@ -11,6 +11,23 @@ pub fn day07() {
     print_result(7, result_1, result_2);
 }
 fn part1(input: &str) -> i32 {
+    let sizes = get_sizes(input);
+    return sizes.values().filter(|x| **x <= 100000).sum();
+}
+
+fn part2(input: &str) -> i32 {
+    let sizes = get_sizes(input);
+    let total_space = 70000000;
+    let used_space = sizes.get("/").unwrap();
+    let free_space = total_space - used_space;
+    let space_needed = 30000000 - free_space;
+    return *sizes
+        .values()
+        .filter(|x| **x >= space_needed)
+        .min()
+        .unwrap();
+}
+fn get_sizes(input: &str) -> HashMap<String, i32> {
     let mut current_path: Vec<String> = Vec::new();
     let mut sizes: HashMap<String, i32> = HashMap::new();
     let lines = input.lines();
@@ -40,13 +57,10 @@ fn part1(input: &str) -> i32 {
             }
         }
         if dir.is_match(line) {
-            let caps = dir.captures(line).unwrap();
+            // let caps = dir.captures(line).unwrap();
         }
     }
-    return sizes.values().filter(|x| **x <= 100000).sum();
-}
-fn part2(input: &str) -> i32 {
-    return 0;
+    sizes
 }
 #[cfg(test)]
 mod tests {
@@ -83,6 +97,6 @@ $ ls
     #[test]
     fn part2_test() {
         let result = part2(INPUT);
-        assert_eq!(0, result)
+        assert_eq!(24933642, result)
     }
 }

@@ -11,13 +11,12 @@ pub fn day05() {
 fn part1(input: &str) -> String {
     let mut stacks: Vec<Vec<char>> = vec![Vec::new(); 10];
     for line in input.lines() {
-        let mut chars: Vec<char> = Vec::new();
         for i in (1..line.len()).step_by(4) {
             let char = line.chars().nth(i).unwrap();
             if char.is_whitespace() || !char.is_alphabetic() {
                 continue;
             };
-            if let Some(stack) = stacks.get(i / 4) {
+            if let Some(_) = stacks.get(i / 4) {
                 stacks[i / 4].insert(0, char)
             } else {
                 stacks[i / 4] = vec![char]
@@ -33,7 +32,7 @@ fn part1(input: &str) -> String {
             let s1 = get_match(&captures, 1);
             let s2 = get_match(&captures, 2);
             let s3 = get_match(&captures, 3);
-            for i in 0..s1 {
+            for _ in 0..s1 {
                 if let Some(value) = stacks[s2 as usize - 1].pop() {
                     stacks[s3 as usize - 1].push(value)
                 }
@@ -58,13 +57,12 @@ fn get_match(captures: &Captures, i: usize) -> i32 {
 fn part2(input: &str) -> String {
     let mut stacks: Vec<Vec<char>> = vec![Vec::new(); 10];
     for line in input.lines() {
-        let mut chars: Vec<char> = Vec::new();
         for i in (1..line.len()).step_by(4) {
             let char = line.chars().nth(i).unwrap();
             if char.is_whitespace() || !char.is_alphabetic() {
                 continue;
             };
-            if let Some(stack) = stacks.get(i / 4) {
+            if let Some(_) = stacks.get(i / 4) {
                 stacks[i / 4].insert(0, char)
             } else {
                 stacks[i / 4] = vec![char]
@@ -81,12 +79,12 @@ fn part2(input: &str) -> String {
             let s2 = get_match(&captures, 2);
             let s3 = get_match(&captures, 3);
             let mut temp = Vec::new();
-            for i in 0..s1 {
+            for _ in 0..s1 {
                 if let Some(value) = stacks[s2 as usize - 1].pop() {
                     temp.push(value)
                 }
             }
-            for i in 0..s1 {
+            for _ in 0..s1 {
                 if let Some(value) = temp.pop() {
                     stacks[s3 as usize - 1].push(value);
                 }

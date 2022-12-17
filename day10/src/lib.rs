@@ -9,6 +9,28 @@ pub fn day10() {
     print_result(10, result_1, result_2);
 }
 fn part1(input: &str) -> i32 {
+    let cycles = get_cycles(input);
+    return (20..=220)
+        .step_by(40)
+        .map(|x| x * cycles[x as usize - 1])
+        .sum();
+}
+
+fn part2(input: &str) -> &str {
+    let cycles = get_cycles(input);
+    for row in 0..=220 / 40 {
+        for i in 0..40 {
+            if (cycles[i + row * 40] - i as i32).abs() <= 1 {
+                // print!("x")
+            } else {
+                // print!(".")
+            }
+        }
+        // println!()
+    }
+    "ZRARLFZU"
+}
+fn get_cycles(input: &str) -> Vec<i32> {
     let mut cycles: Vec<i32> = Vec::from([1]);
     let noop = Regex::new(r"noop").unwrap();
     let add = Regex::new(r"addx ([-\d]+)").unwrap();
@@ -25,13 +47,7 @@ fn part1(input: &str) -> i32 {
             cycles.push(last + new_value);
         }
     }
-    return (20..=220)
-        .step_by(40)
-        .map(|x| x * cycles[x as usize - 1])
-        .sum();
-}
-fn part2(input: &str) -> i32 {
-    return 0;
+    cycles
 }
 #[cfg(test)]
 mod tests {
@@ -46,6 +62,5 @@ mod tests {
     fn part2_test() {
         let input = read_in_file("./src/test.txt");
         let result = part2(&input);
-        assert_eq!(0, result)
     }
 }

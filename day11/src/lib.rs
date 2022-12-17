@@ -1,4 +1,5 @@
 use inputs::read_in_file;
+use num::integer::lcm;
 use regex::Regex;
 use results::print_result;
 use std::str::FromStr;
@@ -10,38 +11,46 @@ pub fn day11() {
     let result_2 = part2(&input);
     print_result(11, result_1, result_2);
 }
-fn part1(input: &str) -> i32 {
+fn part1(input: &str) -> i128 {
+    get_monkey_business(input, 20, 3)
+}
+
+fn part2(input: &str) -> i128 {
+    get_monkey_business(input, 10000, 1)
+}
+fn get_monkey_business(input: &str, rounds: i32, divisor: i128) -> i128 {
     let mut monkeys = get_monkeys(input);
-    for i in 0..20 {
+    let mut monkey_lcm = 1;
+    for monkey in &monkeys {
+        monkey_lcm = lcm(monkey_lcm, monkey.divisor);
+    }
+    for _ in 0..rounds {
         for j in 0..monkeys.len() {
-            monkeys[j].clone().round(&mut monkeys);
+            monkeys[j].clone().round(&mut monkeys, divisor, monkey_lcm);
         }
     }
     monkeys.sort_by_key(|x| x.inspections);
-    return monkeys
+    monkeys
         .iter()
         .rev()
         .take(2)
         .map(|x| x.inspections)
-        .product();
-}
-fn part2(input: &str) -> i32 {
-    return 0;
+        .product()
 }
 #[derive(Clone, Debug)]
 struct Monkey {
-    id: i32,
-    starting_items: Vec<i32>,
+    id: i128,
+    starting_items: Vec<i128>,
     operator: String,
-    value: i32,
-    divisor: i32,
-    true_monkey: i32,
-    false_monkey: i32,
-    inspections: i32,
+    value: i128,
+    divisor: i128,
+    true_monkey: i128,
+    false_monkey: i128,
+    inspections: i128,
 }
 
 impl Monkey {
-    fn operation(&self, x: i32) -> i32 {
+    fn operation(&self, x: i128) -> i128 {
         let value = match self.value {
             0 => x,
             _ => self.value,
@@ -52,17 +61,18 @@ impl Monkey {
             &_ => panic!("unknown operator {}", self.operator.as_str()),
         }
     }
-    fn round(&self, monkeys: &mut Vec<Monkey>) {
+    fn round(&self, monkeys: &mut Vec<Monkey>, down: i128, lcm: i128) {
         for item in &self.starting_items {
             let inspected = self.operation(item.to_owned());
             monkeys[self.id as usize].inspections += 1;
-            let seen = inspected / 3;
+            let seen = inspected / down;
+            let seen = seen % lcm;
             let next_monkey = &self.test(seen);
             monkeys[*next_monkey as usize].starting_items.push(seen);
         }
         monkeys[self.id as usize].starting_items = Vec::new();
     }
-    fn test(&self, x: i32) -> i32 {
+    fn test(&self, x: i128) -> i128 {
         if x % self.divisor == 0 {
             self.true_monkey
         } else {
@@ -141,15 +151,16 @@ Monkey 3:
         let result = part1(INPUT);
         assert_eq!(10605, result)
     }
-    // #[test]
-    // fn part2_test() {
-    //     let result = part2(INPUT);
-    //     assert_eq!(0, result)
-    // }
+    #[test]
+    fn part2_test() {
+        let result = part2(INPUT);
+        assert_eq!(2713310158, result)
+    }
 
     #[test]
     fn monkey_regex() {
         let monkeys = get_monkeys(INPUT);
+
         assert_eq!(4, monkeys.len());
         assert_eq!(0, monkeys[0].id);
         assert_eq!(1, monkeys[1].id);

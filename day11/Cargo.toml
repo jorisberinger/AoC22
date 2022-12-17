@@ -9,4 +9,5 @@ edition = "2021"
 inputs = { version = "0.1.0", path = "../inputs" }
 regex= "1.7.0"
 results = { version = "0.1.0", path = "../results" }
-lazy_static = "1.4.0"
+num="0.4.0"
+ lazy_static = "1.4.0"

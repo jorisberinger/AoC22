@@ -46,7 +46,7 @@ fn part2(input: &str) -> i32 {
             let direction = caps.get(1).unwrap().as_str();
             let steps: i32 = caps.get(2).unwrap().as_str().parse().unwrap();
             // println!("{:?} {:?}", direction, steps);
-            for i in 0..steps {
+            for _ in 0..steps {
                 tail_positions[0] = match direction {
                     "R" => (tail_positions[0].0 + 1, tail_positions[0].1),
                     "U" => (tail_positions[0].0, tail_positions[0].1 + 1),
@@ -107,7 +107,6 @@ fn update_tail2(tail_positions: &mut Vec<(i32, i32)>) {
                     tail_positions[i]
                 );
                 panic!();
-                tail_positions[i]
             }
         };
     }
@@ -184,21 +183,21 @@ U 20";
     }
     #[test]
     fn tail_1() {
-        let mut head_position = (2, 0);
+        let head_position = (2, 0);
         let mut tail_position = (0, 0);
         update_tail(&mut tail_position, head_position);
         assert_eq!((1, 0), tail_position);
     }
     #[test]
     fn tail_2() {
-        let mut head_position = (2, 1);
+        let head_position = (2, 1);
         let mut tail_position = (0, 0);
         update_tail(&mut tail_position, head_position);
         assert_eq!((1, 1), tail_position);
     }
     #[test]
     fn tail_3() {
-        let mut head_position = (-1, -2);
+        let head_position = (-1, -2);
         let mut tail_position = (0, 0);
         update_tail(&mut tail_position, head_position);
         assert_eq!((-1, -1), tail_position);

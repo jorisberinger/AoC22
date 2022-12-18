@@ -14,9 +14,48 @@ fn part1(input: &str) -> i32 {
     return result;
 }
 fn part2(input: &str) -> i32 {
-    return 0;
+    let (map, start, end) = read_in_map(input);
+    let result = dijkstrap2(&map, start, end);
+    return result;
 }
 
+fn dijkstrap2(map: &Vec<Vec<i32>>, position: (i32, i32), end: (i32, i32)) -> i32 {
+    let mut score_map = map.clone();
+    // set everthing to infinity
+    for x in 0..score_map.len() {
+        for y in 0..score_map[0].len() {
+            score_map[x][y] = i32::MAX;
+        }
+    }
+    // setup queue
+    let mut queue = Vec::new();
+    for x in 0..map.len() {
+        for y in 0..map[0].len() {
+            if map[x][y] == 0 {
+                queue.push(((x as i32, y as i32), 0))
+            }
+        }
+    }
+    // calculate scores
+    while let Some((pos, s)) = queue.pop() {
+        if s >= score_map[pos.0 as usize][pos.1 as usize] {
+            continue;
+        } else {
+            score_map[pos.0 as usize][pos.1 as usize] = s;
+        }
+        for (dx, dy) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
+            let (nx, ny) = (pos.0 + dx, pos.1 + dy);
+            if nx >= 0 && ny >= 0 && nx < map.len() as i32 && ny < map[0].len() as i32 {
+                let nv = map[(nx) as usize][(ny) as usize];
+                let cv = map[pos.0 as usize][pos.1 as usize];
+                if nv <= cv + 1 {
+                    queue.push(((nx, ny), s + 1));
+                }
+            }
+        }
+    }
+    return score_map[end.0 as usize][end.1 as usize];
+}
 fn dijkstra(map: &Vec<Vec<i32>>, position: (i32, i32), end: (i32, i32)) -> i32 {
     let mut score_map = map.clone();
     // set everthing to infinity
@@ -91,11 +130,11 @@ abdefghi";
         let result = part1(INPUT);
         assert_eq!(31, result)
     }
-    // #[test]
-    // fn part2_test() {
-    //     let result = part2(INPUT);
-    //     assert_eq!(0, result)
-    // }
+    #[test]
+    fn part2_test() {
+        let result = part2(INPUT);
+        assert_eq!(29, result)
+    }
     #[test]
     fn input_test() {
         let (result, start, end) = read_in_map(INPUT);

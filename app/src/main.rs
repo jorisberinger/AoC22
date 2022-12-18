@@ -9,6 +9,7 @@ use day08::day08;
 use day09::day09;
 use day10::day10;
 use day11::day11;
+use day12::day12;
 use std::time::Instant;
 fn main() {
     let start = Instant::now();
@@ -23,5 +24,6 @@ fn main() {
     day09();
     day10();
     day11();
+    day12();
     println!("Took {:?}", Instant::now() - start)
 }

@@ -10,64 +10,42 @@ pub fn day12() {
 }
 fn part1(input: &str) -> i32 {
     let (map, start, end) = read_in_map(input);
-    let mut memory = HashMap::new();
-    let result = step(&map, start, end, Vec::new(), &mut memory).unwrap();
+    let result = dijkstra(&map, start, end);
     return result;
 }
 fn part2(input: &str) -> i32 {
     return 0;
 }
-fn step(
-    map: &Vec<Vec<i32>>,
-    position: (i32, i32),
-    end: (i32, i32),
-    visited: Vec<(i32, i32)>,
-    memory: &mut HashMap<(i32, i32), Option<i32>>,
-) -> Option<i32> {
-    // println!("{:?}", memory);
-    if position == end {
-        // println!("{}, path: {:?}", visited.len(), visited);
-        return Some(visited.len() as i32);
-    }
-    let mut value: Option<i32> = None;
-    for (dx, dy) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
-        let (nx, ny) = (position.0 + dx, position.1 + dy);
-        if nx >= 0 && ny >= 0 && nx < map.len() as i32 && ny < map[0].len() as i32
-        // && !visited.contains(&(nx, ny))
-        // && !memory.contains_key(&(nx, ny))
-        {
-            if let Some(score) = memory.get(&(nx, ny)) {
-                if let Some(length) = score {
-                    if *length <= visited.len() as i32 {
-                        continue;
-                    }
-                } else {
-                    continue;
-                }
-            }
-            let nv = map[(nx) as usize][(ny) as usize];
-            let cv = map[position.0 as usize][position.1 as usize];
-            if nv <= cv + 1 {
-                let mut vi = visited.clone();
-                vi.push(position);
 
-                memory.insert(position, Some(visited.len() as i32));
-                if let Some(score) = step(map, ((nx), (ny)), end, vi, memory) {
-                    if let Some(best_score) = value {
-                        value = Some(cmp::min(best_score, score));
-                    } else {
-                        value = Some(score)
-                    }
-                } else {
-                    // println!("Burn {},{}", nx, ny);
-                    if !memory.contains_key(&(nx, ny)) {
-                        memory.insert((nx, ny), None);
-                    }
+fn dijkstra(map: &Vec<Vec<i32>>, position: (i32, i32), end: (i32, i32)) -> i32 {
+    let mut score_map = map.clone();
+    // set everthing to infinity
+    for x in 0..score_map.len() {
+        for y in 0..score_map[0].len() {
+            score_map[x][y] = i32::MAX;
+        }
+    }
+    // setup queue
+    let mut queue = Vec::from([(position, 0)]);
+    // calculate scores
+    while let Some((pos, s)) = queue.pop() {
+        if s >= score_map[pos.0 as usize][pos.1 as usize] {
+            continue;
+        } else {
+            score_map[pos.0 as usize][pos.1 as usize] = s;
+        }
+        for (dx, dy) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
+            let (nx, ny) = (pos.0 + dx, pos.1 + dy);
+            if nx >= 0 && ny >= 0 && nx < map.len() as i32 && ny < map[0].len() as i32 {
+                let nv = map[(nx) as usize][(ny) as usize];
+                let cv = map[pos.0 as usize][pos.1 as usize];
+                if nv <= cv + 1 {
+                    queue.push(((nx, ny), s + 1));
                 }
             }
         }
     }
-    value
+    return score_map[end.0 as usize][end.1 as usize];
 }
 fn get_chars() -> HashMap<char, i32> {
     ('a'..='z')

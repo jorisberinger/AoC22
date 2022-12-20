@@ -1,4 +1,4 @@
-use std::{cmp, collections::HashMap, i32::MAX, mem};
+use std::collections::HashMap;
 
 use inputs::read_in_file;
 use results::print_result;
@@ -14,12 +14,12 @@ fn part1(input: &str) -> i32 {
     return result;
 }
 fn part2(input: &str) -> i32 {
-    let (map, start, end) = read_in_map(input);
-    let result = dijkstrap2(&map, start, end);
+    let (map, _, end) = read_in_map(input);
+    let result = dijkstrap2(&map, end);
     return result;
 }
 
-fn dijkstrap2(map: &Vec<Vec<i32>>, position: (i32, i32), end: (i32, i32)) -> i32 {
+fn dijkstrap2(map: &Vec<Vec<i32>>, end: (i32, i32)) -> i32 {
     let mut score_map = map.clone();
     // set everthing to infinity
     for x in 0..score_map.len() {

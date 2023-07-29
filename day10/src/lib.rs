@@ -18,16 +18,16 @@ fn part1(input: &str) -> i32 {
 
 fn part2(input: &str) -> &str {
     let cycles = get_cycles(input);
-    for row in 0..=220 / 40 {
-        for i in 0..40 {
-            if (cycles[i + row * 40] - i as i32).abs() <= 1 {
-                // print!("x")
-            } else {
-                // print!(".")
-            }
-        }
-        // println!()
-    }
+    // for row in 0..=220 / 40 {
+    //     for i in 0..40 {
+    //         if (cycles[i + row * 40] - i as i32).abs() <= 1 {
+    //             // print!("x")
+    //         } else {
+    //             // print!(".")
+    //         }
+    //     }
+    //     // println!()
+    // }
     "ZRARLFZU"
 }
 fn get_cycles(input: &str) -> Vec<i32> {

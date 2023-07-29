@@ -1,3 +1,5 @@
+use std::{cmp::Ordering, fmt::Display};
+
 use inputs::read_in_file;
 use log::{debug, info};
 use results::print_result;
@@ -10,11 +12,28 @@ pub fn day13() {
     let result_2 = part2(&input);
     print_result(13, result_1, result_2);
 }
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 enum Data {
     Integer(i32),
     List(Vec<Data>),
+}
+
+impl Display for Data {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Data::Integer(v) => {
+                write!(f, "{}", v)
+            }
+            Data::List(list) => {
+                write!(f, "[").unwrap();
+                for l in list {
+                    write!(f, "{}", l).unwrap();
+                }
+                write!(f, "]")
+            }
+        }
+    }
 }
 fn part1(input: &str) -> i32 {
     env_logger::try_init().unwrap_or(());
@@ -48,7 +67,7 @@ fn compare(left: &Data, right: &Data, right_int: bool) -> (bool, bool) {
                 }
                 return (comp, false);
             }
-            (true, false)
+            (true, true)
         }
         (Data::List(left_list), Data::Integer(_)) => {
             debug!("left is list, right is integer");
@@ -74,7 +93,47 @@ fn compare(left: &Data, right: &Data, right_int: bool) -> (bool, bool) {
     }
 }
 fn part2(input: &str) -> i32 {
-    0
+    // Read in packets ignore empty lines
+    // Sort Packets with comparison function from part 1;
+
+    env_logger::try_init().unwrap_or(());
+    let a: Vec<&str> = input.lines().collect();
+    let mut res = 0;
+    let d1 = Data::List(vec![Data::List(vec![Data::Integer(2)])]);
+    let d2 = Data::List(vec![Data::List(vec![Data::Integer(6)])]);
+    // let d1 = Data::List(vec![Data::List(vec![Data::List(vec![Data::Integer(2)])])]);
+    // let d2 = Data::List(vec![Data::List(vec![Data::List(vec![Data::Integer(6)])])]);
+    // let d1 = Data::List(vec![Data::Integer(2)]);
+    // let d2 = Data::List(vec![Data::Integer(6)]);
+    let mut packets = vec![d1.clone(), d2.clone()];
+    for p in a {
+        if p.is_empty() {
+            continue;
+        }
+        let packet: Vec<Data> = serde_json::from_str(p).unwrap();
+        packets.push(Data::List(packet));
+    }
+    packets.sort_by(|a, b| {
+        let (cmp, next) = compare(a, b, false);
+        if cmp {
+            Ordering::Less
+        } else {
+            Ordering::Greater
+        }
+    });
+    info!("{:?}", packets);
+    for (i, packet) in packets.iter().enumerate() {
+        if *packet == d1 {
+            res = i + 1;
+        }
+        if *packet == d2 {
+            res *= i + 1;
+        }
+    }
+    for p in packets {
+        info!("P: {}", p);
+    }
+    res as i32
 }
 
 #[cfg(test)]
@@ -103,14 +162,36 @@ mod tests {
 
 [1,[2,[3,[4,[5,6,7]]]],8,9]
 [1,[2,[3,[4,[5,6,0]]]],8,9]";
+    // #[ignore]
     #[test]
     fn part1_test() {
         let result = part1(INPUT);
         assert_eq!(13, result)
     }
+    // #[ignore]
     #[test]
     fn part2_test() {
         let result = part2(INPUT);
-        assert_eq!(0, result)
+        assert_eq!(140, result)
+    }
+    #[test]
+    fn wrong_parts() {
+        env_logger::try_init().unwrap_or(());
+        let p1 = Data::List(vec![
+            Data::List(vec![Data::Integer(1)]),
+            Data::List(vec![Data::Integer(2), Data::Integer(3), Data::Integer(4)]),
+        ]);
+        info!("{}", p1.clone());
+        let p2 = Data::List(vec![
+            Data::List(vec![Data::Integer(1)]),
+            Data::List(vec![Data::Integer(4)]),
+        ]);
+        info!("{}", p2.clone());
+        let (cmp, _) = compare(&p1, &p2, false);
+        info!("{}", cmp);
+        assert!(cmp);
+        let (cmp, _) = compare(&p2, &p1, false);
+        info!("{}", cmp);
+        assert!(!cmp);
     }
 }

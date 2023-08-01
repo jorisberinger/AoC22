@@ -14,7 +14,7 @@ fn part1(input: &str) -> i32 {
     let cave_map = CaveMap::from(input);
     println!("{}", cave_map);
     let mut open_valves = Vec::new();
-    let result = cave_map.get_path("AA", 20, &mut open_valves, &Vec::new());
+    let result = cave_map.get_path("AA", 30, &mut open_valves, None);
     return result;
 }
 fn part2(input: &str) -> i32 {
@@ -48,15 +48,8 @@ impl CaveMap {
         start: &'a str,
         minutes: i32,
         open_valves: &'a mut Vec<&'a str>,
-        visited_valves: &Vec<&str>,
+        last_valve: Option<&'a str>,
     ) -> i32 {
-        // println!(
-        //     "{} Cave {}, minutes {} open_valves {:?}",
-        //     " ".repeat(5 - minutes as usize),
-        //     start,
-        //     minutes,
-        //     open_valves
-        // );
         if minutes <= 0 {
             return 0;
         }
@@ -65,33 +58,34 @@ impl CaveMap {
 
         let flow = cave.flow_rate * (minutes - 1);
 
-        // let mut with_open_valve = open_valves.clone();
-        // with_open_valve.push(start);
-        open_valves.push(start);
-
-        let mut with_visited_valve = visited_valves.clone();
-        with_visited_valve.push(start);
-
         let option_open = match open_valves.contains(&start) || cave.flow_rate == 0 {
-            false => flow + self.get_path(start, minutes - 1, open_valves, &with_visited_valve),
+            false => {
+                open_valves.push(start);
+                let r =
+                    flow + self.get_path(start, minutes - 1, &mut open_valves.clone(), last_valve);
+                open_valves.pop();
+                r
+            }
             true => 0,
         };
+
         let option_closed = cave
             .tunnels
             .iter()
-            // .par_iter()
-            // .filter(|tunnel| !visited_valves.contains(&tunnel.as_str()))
-            .map(|tunnel| self.get_path(&tunnel, minutes - 1, open_valves, &with_visited_valve))
+            .filter(|tunnel| match last_valve {
+                Some(last_valve) => (last_valve != *tunnel) || (cave.tunnels.len() == 1),
+                None => true,
+            })
+            .map(|tunnel| {
+                self.get_path(&tunnel, minutes - 1, &mut open_valves.clone(), Some(start))
+            })
             .max()
             .unwrap_or(0);
 
-        // println!(
-        //     "Cave {}, minutes {},  option_open {}, option_closed {}",
-        //     start, minutes, option_open, option_closed
-        // );
         return option_open.max(option_closed);
     }
 }
+
 impl fmt::Display for CaveMap {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut result = String::new();

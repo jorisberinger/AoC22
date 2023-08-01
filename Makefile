@@ -1,5 +1,5 @@
 run:
-	cargo-watch -x check -x "nextest run" -x "run --release"
+	cargo-watch -x check -x "nextest run --release" -x "run --release"
 test:
 	cargo-watch -x check -x "nextest run"
 day: delete-day
